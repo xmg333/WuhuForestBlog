@@ -14,6 +14,7 @@
  Date: 13/04/2021 13:23:29
 */
 
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -543,3 +544,13 @@ INSERT INTO `user` VALUES (4, 'lisi', '123456', '李四', 'lisi@qq.com', '', '/i
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- Upgrade database for more secure login
+-- ----------------------------
+create table userV2 like user;
+insert into userV2 SELECT * from user;
+alter table userV2 add user_pass_temp binary(32);
+update userV2 set userV2.user_pass_temp = unhex(sha2(user_pass, 256));
+alter table userV2 drop user_pass;
+alter table userV2 rename column user_pass_temp to user_pass;

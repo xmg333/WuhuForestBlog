@@ -57,6 +57,7 @@
             background-attachment: fixed;
         }
     </style>
+
 </head>
 <body class="login login-action-login wp-core-ui  locale-zh-cn">
 <div id="login">
@@ -81,7 +82,7 @@
         </p>
         <p>
             <label for="user_pass">密码<br />
-                <input type="password" name="password" id="user_pass" class="input" value="<%=password%>" size="20" required/>
+                <input type="password" name="password" id="user_pass" class="input" value="<%=password%>" required/>
             </label>
         </p>
         <p class="forgetmenot"><label for="rememberme"><input name="rememberme" type="checkbox" id="rememberme" value="1" checked /> 记住密码</label></p>
@@ -113,8 +114,8 @@
 <div class="clear"></div>
 
 <script src="/js/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/crypto-js/crypto-js.js"></script>
 <script type="text/javascript">
-
 
     <%--登录验证--%>
     $("#submit-btn").click(function () {
@@ -125,10 +126,19 @@
         } else if(password==""){
             alert("密码不可为空!");
         } else {
+            password = CryptoJS.SHA256(password);
+            password = password.toString(CryptoJS.enc.Hex).toUpperCase();
+
+            var passInput = document.getElementById("user_pass");
+            passInput.value = password;
+
+            // alert(password);
+            // alert($("#loginForm").serialize());
+
             $.ajax({
                 async: false,//同步，待请求完毕后再执行后面的代码
                 type: "POST",
-                url: '/loginVerify',
+                url: '/v2/loginVerify',
                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 data: $("#loginForm").serialize(),
                 dataType: "json",

@@ -95,15 +95,22 @@ public class AdminController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/loginVerify", method = RequestMethod.POST, produces = {"text/plain;charset=UTF-8"})
-    @ResponseBody
+    @RequestMapping(value = "/loginVerify", produces = {"text/plain;charset=UTF-8"})
+//    @ResponseBody
     public String loginVerify(HttpServletRequest request, HttpServletResponse response) {
+        return "redirect:/img/nizaiganshenme.png";
+    }
+
+    @RequestMapping(value = "/v2/loginVerify", method = RequestMethod.POST, produces = {"text/plain;charset=UTF-8"})
+    @ResponseBody
+    public String loginVerify2(HttpServletRequest request, HttpServletResponse response){
         Map<String, Object> map = new HashMap<String, Object>();
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String rememberme = request.getParameter("rememberme");
         User user = userService.getUserByNameOrEmail(username);
+        System.out.println("usre=============>"+user.toString());
         if (user == null) {
             map.put("code", 0);
             map.put("msg", "用户名无效！");
